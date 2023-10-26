@@ -21,9 +21,9 @@ export default class BoardPresenter {
         render(this.board, this.container);
         render(new Sorting(), this.board.getElement());
         render(this.taskList, this.board.getElement());
-        render(new TaskEdit(), this.taskList.getElement());
+        render(new TaskEdit(this.boardTasks[0]), this.taskList.getElement());
 
-        for(let i = 0; i < this.boardTasks.length; i++) {
+        for(let i = 1; i < this.boardTasks.length; i++) {
             render(new Task(this.boardTasks[i]), this.taskList.getElement())
         }
 

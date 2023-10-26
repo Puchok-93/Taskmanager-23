@@ -7,7 +7,7 @@ const taskTemplate = (task) => {
     const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
 
     // Если передаваемая дата не null, преобразуем дату в человекопонятный формат
-    const date = dueDate != null ? humanizeTaskDueDate(dueDate) : '';
+    const humanizeDate = dueDate != null ? humanizeTaskDueDate(dueDate) : '';
 
     // Если задача просрочена, добавляем класс deadline
     const deadlineClass = isTaskExpire(dueDate) ? 'card--deadline' : '';
@@ -22,7 +22,6 @@ const taskTemplate = (task) => {
     const isFavoriteClass = isFavorite ? 'card__btn--favorites card__btn--disabled' : 'card__btn--favorites';
 
     return (
-        
         `<article class="card card--${color} ${deadlineClass} ${repeatClass}">
             <div class="card__form">
                 <div class="card__inner">
@@ -55,7 +54,7 @@ const taskTemplate = (task) => {
                             <div class="card__dates">
                             <div class="card__date-deadline">
                                 <p class="card__input-deadline-wrap">
-                                <span class="card__date">${date}</span>
+                                <span class="card__date">${humanizeDate}</span>
                                 </p>
                             </div>
                             </div>
