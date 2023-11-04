@@ -13,7 +13,49 @@ export default class BoardPresenter {
 
     #container = null;
     #tasksModel = null;
-    #tasks = [];
+    #tasks = []; // Массив задач, который будет наполнятся данными из модели
+
+
+    // Метод отрисовки задачи
+    #renderTask = (task) => {
+        const taskComponent = new Task(task);
+        const editTaskComponent = new TaskEdit(task);
+
+        // Изменяем карточку на форму
+        const replaceCardToForm = () => {
+            this.#taskList.element.replaceChild(editTaskComponent.element, taskComponent.element);
+        }
+
+        // Изменяем форму на карточку
+        const replaceFormToCard = () => {
+            this.#taskList.element.replaceChild(taskComponent.element, editTaskComponent.element);
+        }
+
+        // 
+        const onEscKeyDown = (e) => {
+            if(e.key === 'Escape' || e.key === 'Ecs') {
+                e.preventDefault();
+                replaceFormToCard();
+                document.removeEventListener('keydown', onEscKeyDown);
+            }
+        }
+
+   
+        // Находим в компоненте кнопку редактирования задачи и по клику показываем форму редактирования
+        taskComponent.element.querySelector('.card__btn--edit').addEventListener('click', () => {
+            replaceCardToForm();
+            document.addEventListener('keydown', onEscKeyDown);
+        });
+
+        // Находим в компоненте кнопку сохранения изменений задачи и по клику показываем карточку
+        editTaskComponent.element.querySelector('.card__form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            replaceFormToCard();
+            document.removeEventListener('keydown', onEscKeyDown);
+        })
+
+        render(taskComponent, this.#taskList.element)
+    }
 
     init = (container, tasksModel) => {
         this.#container = container;
@@ -23,12 +65,11 @@ export default class BoardPresenter {
         render(this.#board, this.#container);
         render(new Sorting(), this.#board.element);
         render(this.#taskList, this.#board.element);
-        render(new TaskEdit(this.#tasks[0]), this.#taskList.element);
 
         for(let i = 1; i < this.#tasks.length; i++) {
-            render(new Task(this.#tasks[i]), this.#taskList.element)
+            this.#renderTask(this.#tasks[i]);
         }
 
-        render(new LoadMoreButton, this.#board.element)
+        render(new LoadMoreButton, this.#board.element);
     }
 }
