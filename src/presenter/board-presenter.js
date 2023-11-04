@@ -10,43 +10,25 @@ import { render } from "../render.js";
 const TASK_COUNT_PER_STEP = 8;
 
 export default class BoardPresenter {
+    #container = null;
+    #tasksModel = null;
+
     #board = new BoardTask(); // Общий section для доски задач
     #taskList = new TaskList(); // Родительский компонент для списка задач
     #loadMoreBtn = new LoadMoreButton();
     #noTask = new NoTask();
 
-    #container = null;
-    #tasksModel = null;
     #tasks = []; // Массив задач, который будет наполнятся данными из модели
     #renderedTaskCount = TASK_COUNT_PER_STEP
 
-    init = (container, tasksModel) => {
+    constructor(container, tasksModel) {
         this.#container = container;
         this.#tasksModel = tasksModel;
+    }
+
+    init = () => {
         this.#tasks = [...this.#tasksModel.tasks]; // Получаем данные задач из модели
-
-        render(this.#board, this.#container);
-        render(new Sorting(), this.#board.element);
-        render(this.#taskList, this.#board.element);
-
-        // Если пустой массив или все задачи в архиве , показать заглушку
-        if(this.#tasks.every((task) => task.isArchive)) {
-            render(this.#noTask, this.#board.element);
-            console.log('Задач нет ')
-        } else {
-            console.log('Задачи есть')
-            for(let i = 0; i < Math.min(this.#tasks.length, TASK_COUNT_PER_STEP); i++) {
-                this.#renderTask(this.#tasks[i])
-            }
-
-            // Если задач больше, чем количество дозакгружаемых задач, 
-            // отрисовываем кнопку loadmore и вещаем на нее обработчик события 
-            if(this.#tasks.length > TASK_COUNT_PER_STEP) {
-                render(this.#loadMoreBtn, this.#board.element);
-                this.#loadMoreBtn.element.addEventListener('click', this.#loadMoreClickHandler);
-            }
-        }
-
+        this.#renderBoard();
     }
 
     #loadMoreClickHandler = (e) => {
@@ -108,5 +90,30 @@ export default class BoardPresenter {
         })
 
         render(taskComponent, this.#taskList.element)
+    }
+
+    #renderBoard = () => {
+        render(this.#board, this.#container);
+
+
+        // Если пустой массив или все задачи в архиве , показать заглушку
+        if(this.#tasks.every((task) => task.isArchive)) {
+            render(this.#noTask, this.#board.element);
+            return
+        } 
+
+        render(new Sorting(), this.#board.element);
+        render(this.#taskList, this.#board.element);
+
+        for(let i = 0; i < Math.min(this.#tasks.length, TASK_COUNT_PER_STEP); i++) {
+            this.#renderTask(this.#tasks[i])
+        }
+
+        // Если задач больше, чем количество дозакгружаемых задач, 
+        // отрисовываем кнопку loadmore и вещаем на нее обработчик события 
+        if(this.#tasks.length > TASK_COUNT_PER_STEP) {
+            render(this.#loadMoreBtn, this.#board.element);
+            this.#loadMoreBtn.element.addEventListener('click', this.#loadMoreClickHandler);
+        }
     }
 }

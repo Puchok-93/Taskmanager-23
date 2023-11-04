@@ -6,10 +6,11 @@ import {render} from './render.js';
 
 const siteMainElement = document.querySelector('.main');
 const siteHeaderElement = siteMainElement.querySelector('.main__control');
-const boardPresenter = new BoardPresenter();
+
 const taskModel = new TaskModel();
+const boardPresenter = new BoardPresenter(siteMainElement, taskModel);
 
 render(new NewTaskBtn, siteHeaderElement);
 render(new Filter, siteMainElement);
 
-boardPresenter.init(siteMainElement, taskModel);
+boardPresenter.init();
