@@ -1,21 +1,23 @@
 import { createElement } from "../render";
 
-const taskList = () => `<div class="board__tasks"></div>`;
+const createTaskList = () => `<div class="board__tasks"></div>`;
 
 export default class TaskList {
-    getTemplate() {
-        return taskList();
+    #element = null;
+    
+    get template() {
+        return createTaskList();
     }
 
-    getElement() {
-        if(!this.element) {
-            this.element = createElement(this.getTemplate());
+    get element() {
+        if(!this.#element) {
+            this.#element = createElement(this.template);
         }
 
-        return this.element 
+        return this.#element 
     }
 
     removeElement() {
-        this.element = null
+        this.#element = null
     }
 }

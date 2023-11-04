@@ -1,21 +1,23 @@
 import { createElement } from "../render";
 
-const boardTask = () => `<section class="board container"></div>`;
+const createBoardTemplate = () => `<section class="board container"></div>`;
 
 export default class BoardTask {
-    getTemplate() {
-        return boardTask();
+    #element = null;
+
+    get template() {
+        return createBoardTemplate();
     }
 
-    getElement() {
-        if(!this.element) {
-            this.element = createElement(this.getTemplate())
+    get element() {
+        if(!this.#element) {
+            this.#element = createElement(this.template)
         }
 
-        return this.element
+        return this.#element
     }
 
     removeElement() {
-        this.element = null;
+        this.#element = null;
     }
 }

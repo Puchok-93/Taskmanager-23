@@ -4,7 +4,7 @@ import { COLORS } from "../const";
 
 
 // Часть разметки шаблона редактирования задачи, отвечающая за отрисовку дат
-const taskEditDateTemplate = (dueDate) => (
+const createTaskEditDateTemplate  = (dueDate) => (
   `<button class="card__date-deadline-toggle" type="button">
       date: <span class="card__date-status">${dueDate !== null ? 'yes' : 'no'}</span>
     </button>
@@ -25,7 +25,7 @@ const taskEditDateTemplate = (dueDate) => (
 );
 
 // Часть разметки шаблона редактирования задачи, отвечающая за отрисовку повторения задачи и дней
-const taskEditRepeatingTemplate = (repeating) => (
+const createTaskEditRepeatingTemplate = (repeating) => (
   `<button class="card__repeat-toggle" type="button">
     repeat:<span class="card__repeat-status">${isTaskRepeating(repeating) ? 'yes' : 'no'}</span>
   </button>
@@ -42,7 +42,7 @@ const taskEditRepeatingTemplate = (repeating) => (
       </fieldset>` : ''}`
 )
 // Часть разметки шаблона редактирования задачи, отвечающая за отрисовку цветов
-const taskEditColorsTemplate = (currentColor) => 
+const createTaskEditColorsTemplate = (currentColor) => 
   COLORS.map(color => `
     <input type="radio" id="color-${color}" class="card__color-input card__color-input--${color} visually-hidden" name="color" value="${color}" ${currentColor === color ? 'checked' : ''}/>
     <label for="color-${color}" class="card__color card__color--${color}">${color}</label>
@@ -68,13 +68,13 @@ const taskEdit = (task = {}) => {
 
   
   // Вызов функции генерации разметки с датами и запись в переменную dateTemplate
-  const dateTemplate = taskEditDateTemplate(dueDate);
+  const dateTemplate = createTaskEditDateTemplate (dueDate);
 
   // Вызов функции генерации разметки с днями, когда повторяется задача repeatingTemplate
-  const repeatingTemplate = taskEditRepeatingTemplate(repeating);
+  const repeatingTemplate = createTaskEditRepeatingTemplate(repeating);
 
   // Вызов функции генерации разметки с цветами colorsTemplate
-  const colorsTemplate = taskEditColorsTemplate(color);
+  const colorsTemplate = createTaskEditColorsTemplate(color);
 
   const repeatClass = isTaskRepeating(repeating) ? 'card--repeat' : ''; 
 
@@ -123,23 +123,26 @@ const taskEdit = (task = {}) => {
 };
 
 export default class TaskEdit {
+   #element = null;
+   #task = null;
+
     constructor(task) {
-      this.task = task;
+      this.#task = task;
     }
 
-    getTemplate() {
-        return taskEdit(this.task);
+    get template() {
+        return taskEdit(this.#task);
     }
 
-    getElement() {
-        if(!this.element) {
-            this.element = createElement(this.getTemplate());
+    get element() {
+        if(!this.#element) {
+            this.#element = createElement(this.template);
         }
 
-        return this.element
+        return this.#element
     }
 
     removeElement() {
-        this.element = null;
+        this.#element = null;
     }
 }

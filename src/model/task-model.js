@@ -1,7 +1,9 @@
 import { generateTask } from "../mock/task.js";
 
 export default class TaskModel {
-    tasks = Array.from({length: 12}, generateTask);
+    #tasks = Array.from({length: 12}, generateTask);
 
-    getTasks = () => this.tasks;
+    get tasks() {
+        return this.#tasks;
+    }
 }

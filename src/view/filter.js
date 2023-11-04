@@ -1,6 +1,7 @@
 import {createElement} from '../render.js';
 
-const createFilterTemplate = () => `
+const createFilterTemplate = () => 
+`
 <section class="main__filter filter container">
     <input type="radio" id="filter__all" class="filter__input visually-hidden" name="filter" checked/>
     <label for="filter__all" class="filter__label">All <span class="filter__all-count">13</span></label>
@@ -14,23 +15,25 @@ const createFilterTemplate = () => `
     <label for="filter__repeating" class="filter__label">Repeating <span class="filter__repeating-count">1</span></label>
     <input type="radio" id="filter__archive" class="filter__input visually-hidden" name="filter"/>
     <label for="filter__archive" class="filter__label">Archive <span class="filter__archive-count">115</span></label>
-    </section>
+</section>
 `
 
 export default class Filter {
-    getTemplate() {
+    #element = null;
+
+    get template() {
         return createFilterTemplate()
     }
 
-    getElement() {
-        if(!this.element) {
-            this.element = createElement(this.getTemplate());
+    get element() {
+        if(!this.#element) {
+            this.#element = createElement(this.template);
         }
 
-        return this.element
+        return this.#element
     }
 
     removeElement() {
-        this.element = null;
+        this.#element = null;
     }
 }

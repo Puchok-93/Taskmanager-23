@@ -46,8 +46,8 @@ const generateColor = () => {
     return COLORS[randomIndex]
 }
 
-const generateReRepeating = () => ({
-    repeating: {
+const generateReRepeating = () => {
+    const repeatObj = {
         mo: getRandomInteger(0, 1),
         tu: false,
         we: getRandomInteger(0, 1),
@@ -55,8 +55,10 @@ const generateReRepeating = () => ({
         fr: false,
         sa: false,
         su: false,
-    },
-})
+    }
+    
+    return repeatObj
+}
 
 // Функция генерации таски
 

@@ -1,7 +1,7 @@
 import { createElement } from "../render";
 import { humanizeTaskDueDate, isTaskExpire, isTaskRepeating} from "../utils";
 
-const taskTemplate = (task) => {
+const createTaskTemplate = (task) => {
 
     // Деструктурируем получаемый объект
     const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
@@ -66,27 +66,27 @@ const taskTemplate = (task) => {
     )
 };
 
-
-
 export default class Task {
+    #element = null;
+    #task = null;
+
     constructor(task) {
-        this.task = task;
+        this.#task = task;
     };
 
-
-    getTemplate() {
-        return taskTemplate(this.task);
+    get template() {
+        return createTaskTemplate(this.#task);
     }
 
-    getElement() {
-        if(!this.element) {
-            this.element = createElement(this.getTemplate());
+    get element() {
+        if(!this.#element) {
+            this.#element = createElement(this.template);
         }
 
-        return this.element;
+        return this.#element;
     }
 
     removeElement() {
-        this.element = null;
+        this.#element = null;
     }
 }

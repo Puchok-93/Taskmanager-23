@@ -8,25 +8,27 @@ import { render } from "../render.js";
 
 
 export default class BoardPresenter {
-    board = new BoardTask(); // Общий section для доски задач
-    taskList = new TaskList(); // Родительский компонент для списка задач
+    #board = new BoardTask(); // Общий section для доски задач
+    #taskList = new TaskList(); // Родительский компонент для списка задач
+
+    #container = null;
+    #tasksModel = null;
+    #tasks = [];
 
     init = (container, tasksModel) => {
-        this.container = container;
-        this.tasksModel = tasksModel;
-        this.boardTasks = [...this.tasksModel.getTasks()]
+        this.#container = container;
+        this.#tasksModel = tasksModel;
+        this.#tasks = [...this.#tasksModel.tasks]; // Получаем данные задач из модели
 
-        console.log(this.boardTasks)
+        render(this.#board, this.#container);
+        render(new Sorting(), this.#board.element);
+        render(this.#taskList, this.#board.element);
+        render(new TaskEdit(this.#tasks[0]), this.#taskList.element);
 
-        render(this.board, this.container);
-        render(new Sorting(), this.board.getElement());
-        render(this.taskList, this.board.getElement());
-        render(new TaskEdit(this.boardTasks[0]), this.taskList.getElement());
-
-        for(let i = 1; i < this.boardTasks.length; i++) {
-            render(new Task(this.boardTasks[i]), this.taskList.getElement())
+        for(let i = 1; i < this.#tasks.length; i++) {
+            render(new Task(this.#tasks[i]), this.#taskList.element)
         }
 
-        render(new LoadMoreButton, this.board.getElement())
+        render(new LoadMoreButton, this.#board.element)
     }
 }
